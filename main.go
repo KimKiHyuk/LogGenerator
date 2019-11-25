@@ -17,15 +17,18 @@ func GetBodyFromUrl(url string) {
 
 
 func main()  {
-	var wait sync.WaitGroup
-	wait.Add(1)
 
-	go func(url string) {
-		defer wait.Done()
-		GetBodyFromUrl(url)
-	}("https://google.com/robots.txt")
+	for {
+		var wait sync.WaitGroup
+		wait.Add(1)
 
-	wait.Wait()
+		go func(url string) {
+			defer wait.Done()
+			GetBodyFromUrl(url)
+		}("https://google.com/robots.txt")
 
-	fmt.Println(time.Now())
+		wait.Wait()
+		fmt.Println(time.Now())
+		time.Sleep(3 * time.Second) // logging by 3 sec
+	}
 }
