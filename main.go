@@ -1,34 +1,24 @@
 package main
 
 import (
-	"fmt"
-	"net/http"
-	"io/ioutil"
-	"sync"
+	"log"
+	"os"
 	"time"
 )
 
-func GetBodyFromUrl(url string) {
-	resp, _ := http.Get(url)
-	robots, _ := ioutil.ReadAll(resp.Body)
-	resp.Body.Close()
-	fmt.Printf("%s\n", robots)
-}
+var loggerInstance *log.Logger
 
+func main() {
 
-func main()  {
+	loggerInstance = log.New(os.Stdout, "INFO: ", log.LstdFlags)
+	loggerInstance.Print("Log service started")
 
 	for {
-		var wait sync.WaitGroup
-		wait.Add(1)
-
 		go func(url string) {
-			defer wait.Done()
-			GetBodyFromUrl(url)
-		}("https://google.com/robots.txt")
+			loggerInstance.Print("Fetching from " + url)
+		}("https://test.com")
 
-		wait.Wait()
-		fmt.Println(time.Now())
+		loggerInstance.Print(time.Now())
 		time.Sleep(3 * time.Second) // logging by 3 sec
 	}
 }
